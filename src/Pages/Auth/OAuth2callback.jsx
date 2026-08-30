@@ -19,15 +19,15 @@ function OAuth2callback()
      if(!token)
      {
 
-         Navigate("/home");
+         Navigate("/home")
 
      }
 
-     saveToken(token);
+     saveToken(token)
 
-     const role = getRoleFromToken();
+     const role = getRoleFromToken()
 
-     Navigate(role == 'ADMIN' ? '/admin/dashboard' : '/user/dashboard')
+     Navigate(role == 'ADMIN' ? '/home-admin' : '/user-home')
     
     
 }, [])

@@ -1,4 +1,4 @@
-import { getRoleFromToken, getToken, isTokenExpired } from "../../utils/tokenUtils"
+import { getRoleFromToken, getToken, isTokenExpired } from "../../../utils/tokenUtils"
 import { Navigate } from "react-router-dom";
 
 function ProtectedRoute({allowAble , children})
@@ -16,9 +16,9 @@ function ProtectedRoute({allowAble , children})
 
     const role = getRoleFromToken();
 
-    if(!role || role !==  allowAble)
+    if(!role || !allowAble.includes(role))
     {
-          return <Navigate to = "/unauthorized"/>
+          return <Navigate to = "/login"/>
     }
 
     return children
