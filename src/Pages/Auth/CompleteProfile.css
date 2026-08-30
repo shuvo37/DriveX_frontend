@@ -1,0 +1,200 @@
+@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap");
+
+:root {
+  --cp-asphalt: #1b1d21;
+  --cp-panel: #24272c;
+  --cp-panel-line: #32363d;
+  --cp-amber: #f2a93b;
+  --cp-amber-dim: #f2a93b33;
+  --cp-ivory: #f5f3ee;
+  --cp-graphite: #8b8f96;
+  --cp-error: #e5484d;
+}
+
+.cp-screen {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cp-asphalt);
+  font-family: "Inter", sans-serif;
+  overflow: hidden;
+  padding: 24px;
+}
+
+.cp-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 900px;
+  height: 900px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, var(--cp-amber-dim) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.cp-card {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  background: var(--cp-panel);
+  border: 1px solid var(--cp-panel-line);
+  border-radius: 16px;
+  padding: 40px 32px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+.cp-eyebrow {
+  display: inline-block;
+  font-family: "Rajdhani", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--cp-amber);
+  margin-bottom: 14px;
+}
+
+.cp-title {
+  font-family: "Rajdhani", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--cp-ivory);
+  margin: 0 0 8px;
+  letter-spacing: 0.01em;
+}
+
+.cp-subtitle {
+  font-size: 14px;
+  color: var(--cp-graphite);
+  margin: 0 0 28px;
+  line-height: 1.5;
+}
+
+.cp-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cp-graphite);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+.cp-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--cp-asphalt);
+  border: 1px solid var(--cp-panel-line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cp-input-wrap:focus-within {
+  border-color: var(--cp-amber);
+  box-shadow: 0 0 0 3px var(--cp-amber-dim);
+}
+
+.cp-input-wrap--error {
+  border-color: var(--cp-error);
+}
+
+.cp-input-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--cp-graphite);
+  flex-shrink: 0;
+}
+
+.cp-input-wrap:focus-within .cp-input-icon {
+  color: var(--cp-amber);
+}
+
+.cp-input-wrap input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--cp-ivory);
+  font-family: "Rajdhani", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.cp-input-wrap input::placeholder {
+  color: var(--cp-panel-line);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.cp-error {
+  font-size: 13px;
+  color: var(--cp-error);
+  margin: 10px 0 0;
+}
+
+.cp-button {
+  position: relative;
+  width: 100%;
+  margin-top: 24px;
+  padding: 14px 16px;
+  background: var(--cp-amber);
+  color: #1b1d21;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.cp-button:hover:not(:disabled) {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.cp-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.cp-button:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.cp-button-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  box-shadow: 0 0 0 0 rgba(242, 169, 59, 0.5);
+  animation: cp-pulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes cp-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(242, 169, 59, 0.35);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(242, 169, 59, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(242, 169, 59, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cp-button-ring {
+    animation: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .cp-card {
+    padding: 32px 24px 24px;
+  }
+}

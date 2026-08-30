@@ -1,141 +1,113 @@
-
-import { useState , useEffect } from "react"
-
-import axios  from "axios"
-
-import { useNavigate , useSearchParams } from "react-router-dom"
+import { useState, useEffect } from "react"
+import axios from "axios"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { saveToken } from "../../utils/tokenUtils"
+import "./CompleteProfile.css"
 
+function CompleteProfile() {
+  const [phone, setPhone] = useState("")
+  const [error, setError] = useState("")
+  const [token, setToken] = useState("")
+  const [loading, setLoading] = useState(false)
 
-function CompleteProfile()
-{
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
 
+  useEffect(() => {
+    const t = searchParams.get("token")
 
-    const [phone , setPhone] = useState('')
+    if (!t) {
+      navigate("/login")
+      return
+    }
 
-    const [city , setCity] = useState('')
+    setToken(t)
+    saveToken(t)
+  }, [])
 
-    const [error, setError] = useState('')
+  function isValidPhone(value) {
+    return /^[0-9]{10,11}$/.test(value)
+  }
 
-    const [token ,setToken] = useState('') 
+  async function handleSubmit() {
+    if (!isValidPhone(phone)) {
+      setError("Enter a valid 10–11 digit phone number.")
+      return
+    }
 
-    const Navigate = useNavigate()
+    setError("")
+    setLoading(true)
 
-    const [SearchParams] = useSearchParams()
+    try {
+      await axios.post(
+        "http://localhost:8080/api/auth/complete-profile",
+        { phoneNumber: phone },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
 
+      navigate("/user/dashboard")
+    } catch (err) {
+      console.log(err.response?.status)
+      console.log(err.response?.data)
 
-      useEffect(()=>{
+      setError(err.response?.data?.message || "Couldn't save your number. Try again.")
+    } finally {
+      setLoading(false)
+    }
+  }
 
-         const t = SearchParams.get('token')
+  function handleKeyDown(e) {
+    if (e.key === "Enter") handleSubmit()
+  }
 
-         if(!t)
-         {
-            Navigate('/login')
+  return (
+    <div className="cp-screen">
+      <div className="cp-glow" />
 
-            return
-         }
+      <div className="cp-card">
+        <span className="cp-eyebrow">STEP 1 · PROFILE</span>
 
-         setToken(t)
+        <h1 className="cp-title">Complete your profile</h1>
+        <p className="cp-subtitle">
+          One last detail before we hand you the keys.
+        </p>
 
-         saveToken(t)
+        <label className="cp-label" htmlFor="phone">
+          Phone number
+        </label>
 
-      } , [])
-     
-
-
-
-      async function handleSubmit()
-      {
-
-
-          try{
-
-
-              await axios.post('http://localhost:8080/api/auth/complete-profile', 
-
-               {phoneNumber:phone , 
-                city : city} , {headers:{Authorization:`Bearer ${token}`}}
-
-              )
-
-            Navigate('/user/dashboard')
-
-
-          }
-          catch(err)
-          {
-
-                console.log(err.response?.status)
-                console.log(err.response?.data)
-
-              setError('failed to save try again')
-                   
-          }
-           
-
-
-      }
-
-
-
-
-
-
-     return (
-
-     
-        <div>
-
-            <h1>Complete Your Profile</h1>
-
-            <input
-            
-                placeholder="phone Number"
-
-                value = {phone}
-
-                onChange={e => setPhone(e.target.value)}
-            
+        <div className={`cp-input-wrap ${error ? "cp-input-wrap--error" : ""}`}>
+          <svg className="cp-input-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M6.6 10.8c1.2 2.4 3.2 4.4 5.6 5.6l1.9-1.9c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1V19.5c0 .6-.4 1-1 1C10.4 20.5 3.5 13.6 3.5 5.4c0-.6.4-1 1-1H7.6c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.5.1.3 0 .7-.2 1L6.6 10.8Z"
+              stroke="currentColor"
+              strokeWidth="1.5"
             />
+          </svg>
 
-            <br/>
-
-            <select value={city} onChange={e => setCity(e.target.value)}>
-
-
-                <option value = "">select city</option>
-                <option value="Dhaka">Dhaka</option>
-                <option value="Chittagong">Chittagong</option>
-                <option value="Sylhet">Sylhet</option>
-                <option value="Rajshahi">Rajshahi</option>
-                <option value="Khulna">Khulna</option>
-
-
-            </select>
-
-            <br/>
-
-            {error && <p> {error}</p>}
-        
-            <button onClick={handleSubmit}> Save and Continue</button>
-
-        
-        
+          <input
+            id="phone"
+            inputMode="numeric"
+            placeholder="e.g. 01712345678"
+            value={phone}
+            onKeyDown={handleKeyDown}
+            onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ""))}
+          />
         </div>
 
+        {error && <p className="cp-error">{error}</p>}
 
-
-
-
-
-
-     )
-
-
-
-
-
+        <button
+          className="cp-button"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          <span className="cp-button-ring" />
+          {loading ? "Saving…" : "Continue to dashboard"}
+        </button>
+      </div>
+    </div>
+  )
 }
-
 
 export default CompleteProfile

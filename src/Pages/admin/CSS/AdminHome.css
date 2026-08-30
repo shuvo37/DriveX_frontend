@@ -1,0 +1,28 @@
+.navbar
+{
+    position: fixed;
+    top:0px; left:0px; right:0px;
+    height: 60px;
+    z-index: 100;
+}
+
+.sidebar
+{
+    position: fixed;
+    left: 0px; top:60px; 
+    width: 240px;
+    bottom: 0px;
+    overflow-y: auto;
+    z-index: 90;
+}
+
+.content
+{
+    position: fixed;
+    top: 60px;
+    left: 240px;
+    right: 0px;
+    bottom: 0px;
+    min-height: calc(100vh - 60px);
+    overflow-y: auto;
+}

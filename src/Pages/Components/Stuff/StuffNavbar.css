@@ -1,0 +1,136 @@
+/* ── User Navbar ── */
+.stuff-navbar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 28px;
+  height: 62px;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* ── Logo ── */
+.stuff-nav-logo {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+.stuff-logo-drive { color: #f1f5f9; }
+.stuff-logo-x     { color: #f43f5e; }
+
+/* ── Nav Links ── */
+.stuff-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  margin-left: auto;
+  padding: 0;
+  flex-shrink: 0;
+}
+.stuff-nav-link {
+  display: block;
+  padding: 6px 13px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #94a3b8;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.stuff-nav-link:hover {
+  background: #0f172a;
+  color: #f1f5f9;
+}
+.stuff-nav-link.stuff-active {
+  background: #f43f5e22;
+  color: #f43f5e;
+  font-weight: 600;
+}
+
+/* ── Hamburger Button (hidden on desktop) ── */
+.stuff-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  padding: 6px;
+  background: none;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.stuff-hamburger span {
+  display: block;
+  height: 2px;
+  background: #94a3b8;
+  border-radius: 2px;
+  transition: all 0.25s ease;
+  transform-origin: center;
+}
+/* Animate to X when open */
+.stuff-hamburger.stuff-open span:nth-child(1) { transform: translateY(7px) rotate(45deg);  }
+.stuff-hamburger.stuff-open span:nth-child(2) { opacity: 0; transform: scaleX(0);           }
+.stuff-hamburger.stuff-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Mobile Overlay ── */
+.stuff-mobile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 199;
+}
+
+/* ── Mobile Dropdown Menu ── */
+.stuff-mobile-menu {
+  position: absolute;
+  top: calc(100% + 1px);
+  left: 0;
+  right: 0;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+  z-index: 200;
+  padding: 12px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: userSlideDown 0.2s ease;
+}
+@keyframes userSlideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.stuff-mobile-link {
+  display: block;
+  padding: 11px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #94a3b8;
+  text-decoration: none;
+  transition: all 0.12s;
+}
+.stuff-mobile-link:hover  { background: #0f172a; color: #f1f5f9; }
+.stuff-mobile-link.stuff-active { background: #f43f5e22; color: #f43f5e; font-weight: 600; }
+
+/* ── Responsive Breakpoints ── */
+
+/* Hide nav links on small screens, show hamburger */
+@media (max-width: 900px) {
+  .stuff-nav-links  { display: none; }
+  .stuff-hamburger  { display: flex; }
+}
+
+/* On very small screens, shrink logo */
+@media (max-width: 400px) {
+  .stuff-nav-logo { font-size: 18px; }
+}

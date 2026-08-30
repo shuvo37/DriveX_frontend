@@ -1,0 +1,671 @@
+/* ── Root ── */
+.cs-root {
+  min-height: 100vh;
+  background: #0f172a;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px 60px;
+  font-family: 'Segoe UI', sans-serif;
+  color: #f1f5f9;
+}
+
+/* ── Card ── */
+.cs-card {
+  width: 100%;
+  max-width: 560px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 20px;
+}
+
+/* ── Header ── */
+.cs-header {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-bottom: 1px solid #334155;
+  padding: 32px 32px 24px;
+  text-align: center;
+}
+.cs-logo       { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+.cs-logo-d     { color: #f1f5f9; }
+.cs-logo-x     { color: #f43f5e; }
+.cs-title      { font-size: 20px; font-weight: 700; margin: 10px 0 6px; }
+.cs-subtitle   { font-size: 13px; color: #64748b; margin: 0; }
+
+/* ── Step Bar ── */
+.stepbar {
+  display: flex;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #334155;
+  background: #0f172a;
+  gap: 0;
+}
+.stepbar-item {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+.step-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.step-circle.active { border-color: #f43f5e; color: #f43f5e; background: #f43f5e18; }
+.step-circle.done   { border-color: #10b981; color: #fff;     background: #10b981;   }
+
+.step-label {
+  font-size: 10px;
+  color: #475569;
+  margin-left: 6px;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+.step-label.active { color: #f43f5e; font-weight: 600; }
+.step-label.done   { color: #10b981; }
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: #334155;
+  margin: 0 8px;
+  transition: background 0.2s;
+}
+.step-line.done { background: #10b981; }
+
+/* ── Section ── */
+.cs-section {
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Label ── */
+.cs-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Input ── */
+.cs-input {
+  width: 100%;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 15px;
+  color: #f1f5f9;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+.cs-input:focus { border-color: #f43f5e; }
+.cs-input.error { border-color: #ef4444; }
+.cs-input::placeholder { color: #475569; }
+
+/* Code input special style */
+.code-input {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 16px;
+  text-align: center;
+  padding: 16px;
+}
+
+.book-btn {
+  background: #f43f5e;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.book-btn:hover { background: #e11d48; }
+
+/* ── Autocomplete ── */
+.cs-autocomplete-wrap { position: relative; }
+.cs-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 50;
+  list-style: none;
+  margin: 0; padding: 0;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+}
+.cs-suggestion-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.cs-suggestion-item:hover { background: #0f172a; }
+.sug-model { font-size: 14px; font-weight: 600; color: #f1f5f9; }
+.sug-meta  { font-size: 11px; color: #64748b; margin-top: 2px; }
+
+/* ── Order Preview ── */
+.cs-order-preview {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.preview-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.preview-label {
+  font-size: 12px;
+  color: #64748b;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+.preview-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f1f5f9;
+  text-align: right;
+}
+.preview-value.location  { color: #94a3b8; font-size: 12px; font-weight: 400; }
+.preview-value.order-id  { color: #f43f5e; font-family: monospace; }
+.preview-value.committed { color: #f59e0b; }
+
+/* ── Fine Banner ── */
+.fine-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid;
+}
+.fine-banner.ontime { background: #10b98118; border-color: #10b981; }
+.fine-banner.slight { background: #f59e0b18; border-color: #f59e0b; }
+.fine-banner.late   { background: #ef444418; border-color: #ef4444; }
+
+.fine-icon  { font-size: 28px; flex-shrink: 0; }
+.fine-text  { flex: 1; }
+.fine-title { font-size: 15px; font-weight: 700; color: #f1f5f9; }
+.fine-desc  { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+
+.fine-amount        { font-size: 26px; font-weight: 800; flex-shrink: 0; }
+.fine-amount.free   { color: #10b981; }
+.fine-amount.warn   { color: #f59e0b; }
+.fine-amount.danger { color: #ef4444; }
+
+/* ── Code Hint Box ── */
+.code-hint-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #0f172a;
+  border: 1px dashed #f43f5e66;
+  border-radius: 12px;
+  padding: 16px;
+}
+.code-hint-icon  { font-size: 22px; flex-shrink: 0; }
+.code-hint-title { font-size: 13px; font-weight: 700; color: #f1f5f9; }
+.code-hint-desc  { font-size: 11px; color: #64748b; margin-top: 2px; }
+.code-value {
+  margin-left: auto;
+  font-size: 28px;
+  font-weight: 900;
+  color: #f43f5e;
+  letter-spacing: 6px;
+  font-family: monospace;
+  flex-shrink: 0;
+}
+
+/* ── Error ── */
+.cs-error {
+  font-size: 13px;
+  color: #ef4444;
+  background: #ef444418;
+  border: 1px solid #ef444444;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+/* ── Buttons ── */
+.cs-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+}
+.cs-btn.primary                        { background: #f43f5e; color: #fff; }
+.cs-btn.primary:hover:not(:disabled)   { background: #e11d48; }
+.cs-btn.primary:disabled               { background: #334155; color: #475569; cursor: not-allowed; }
+
+.cs-btn.download                       { background: #0f172a; border: 1px solid #10b981; color: #10b981; }
+.cs-btn.download:hover                 { background: #10b98118; }
+
+.cs-btn.ghost                          { background: transparent; border: 1px solid #334155; color: #94a3b8; }
+.cs-btn.ghost:hover                    { background: #0f172a; color: #f1f5f9; }
+
+/* ── Receipt ── */
+.receipt {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.receipt-header {
+  background: #1e293b;
+  padding: 18px 20px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #334155;
+}
+.receipt-logo      { font-size: 18px; font-weight: 800; }
+.receipt-logo .rx  { color: #f43f5e; }
+.receipt-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #f43f5e;
+  background: #f43f5e18;
+  border: 1px solid #f43f5e44;
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+
+.receipt-divider        { border: none; border-top: 1px solid #334155; margin: 0; }
+.receipt-divider.dashed { border-style: dashed; }
+
+.receipt-rows {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+  color: #64748b;
+}
+.receipt-val       { font-weight: 600; color: #f1f5f9; text-align: right; }
+.receipt-val.mono  { font-family: monospace; color: #f43f5e; }
+.receipt-val.small { font-size: 11px; color: #94a3b8; font-weight: 400; }
+.receipt-val.green { color: #10b981; }
+.receipt-val.red   { color: #ef4444; }
+
+.receipt-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 2px;
+}
+
+/* ── Total Row ── */
+.receipt-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+.receipt-total-val       { font-size: 26px; font-weight: 900; color: #f1f5f9; }
+.receipt-total-val.green { color: #10b981; }
+
+/* ── Proof Row ── */
+.receipt-proof-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  gap: 12px;
+}
+.proof-label { display: flex; align-items: center; gap: 10px; }
+.proof-icon  { font-size: 20px; flex-shrink: 0; }
+.proof-title { font-size: 13px; font-weight: 700; color: #f1f5f9; }
+.proof-sub   { font-size: 11px; color: #64748b; margin-top: 2px; }
+.proof-code  {
+  font-size: 26px;
+  font-weight: 900;
+  color: #10b981;
+  font-family: monospace;
+  letter-spacing: 6px;
+  flex-shrink: 0;
+}
+
+.receipt-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: #1e293b;
+  border-top: 1px solid #334155;
+}
+.receipt-code { font-size: 12px; color: #64748b; font-family: monospace; }
+.receipt-date { font-size: 12px; color: #64748b; }
+
+/* ── Responsive ── */
+@media (max-width: 500px) {
+  .cs-section { padding: 20px 18px; }
+  .cs-header  { padding: 24px 18px 18px; }
+  .stepbar    { padding: 16px 12px; }
+  .step-label { display: none; }
+  .code-value { font-size: 22px; letter-spacing: 4px; }
+  .code-input { font-size: 22px; letter-spacing: 10px; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   NEW ADDITIONS — Back button, Pay Fine step, Fine paid badge,
+   Receipt note row, $0 total green variant
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Back Button ── */
+.cs-btn.back {
+  width: 100%;
+  padding: 0.65rem 1.5rem;
+  margin-top: -4px;           /* pull it a bit closer to the primary btn above */
+  background: transparent;
+  color: #64748b;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  letter-spacing: 0.01em;
+}
+.cs-btn.back:hover {
+  background: #0f172a;
+  color: #94a3b8;
+  border-color: #334155;
+}
+
+/* ── Pay Fine button ── */
+.cs-btn.pay {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+  box-shadow: 0 4px 18px rgba(244, 63, 94, 0.35);
+  letter-spacing: 0.02em;
+}
+.cs-btn.pay:hover  { opacity: 0.92; box-shadow: 0 6px 24px rgba(244, 63, 94, 0.5); }
+.cs-btn.pay:active { transform: scale(0.99); }
+
+/* ── Pay Fine step — header block ── */
+.pay-fine-header {
+  text-align: center;
+  padding: 4px 0 6px;
+}
+.pay-fine-icon  { font-size: 3rem; margin-bottom: 8px; }
+.pay-fine-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0 0 6px;
+}
+.pay-fine-sub {
+  font-size: 0.83rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* ── Pay Fine step — breakdown card ── */
+.pay-fine-card {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+.pay-fine-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 13px;
+}
+.pay-fine-row.total { padding-top: 10px; }
+.pay-fine-label     { color: #64748b; }
+.pay-fine-val       { color: #e2e8f0; font-weight: 600; }
+.pay-fine-val.mono  { font-family: monospace; font-size: 12px; color: #f43f5e; }
+.pay-fine-val.red   { color: #f43f5e; }
+.pay-fine-divider   { border: none; border-top: 1px dashed #334155; margin: 6px 0; }
+.pay-fine-amount    { font-size: 1.5rem; font-weight: 900; color: #f43f5e; }
+
+/* ── Testing notice banner ── */
+.pay-fine-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #0c1f33;
+  border: 1px solid #1d4ed844;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  color: #60a5fa;
+  line-height: 1.5;
+}
+.notice-icon { flex-shrink: 0; margin-top: 1px; }
+
+/* ── Fine paid confirmation badge (shown at top of Verify step) ── */
+.fine-paid-badge {
+  background: #052e16;
+  border: 1px solid #166534;
+  color: #4ade80;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ── Receipt — pre-paid note row ── */
+.receipt-note-row  { padding: 0 0 2px; }
+.receipt-note {
+  font-size: 11px;
+  color: #475569;
+  font-style: italic;
+}
+
+/* ── Loading info banner (Step 1) ── */
+.cs-info-banner {
+  font-size: 13px;
+  color: #60a5fa;
+  background: #0c1f33;
+  border: 1px solid #1d4ed844;
+  border-radius: 8px;
+  padding: 10px 14px;
+  text-align: center;
+}
+
+/* ── Loading & empty states (Step 1) ── */
+.cs-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #64748b;
+  font-size: 14px;
+  padding: 12px 0;
+}
+.cs-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #334155;
+  border-top-color: #f43f5e;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.cs-empty {
+  color: #64748b;
+  font-size: 14px;
+  text-align: center;
+  padding: 20px 0;
+  background: #0f172a;
+  border: 1px dashed #334155;
+  border-radius: 10px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PAYMENT METHOD SELECTOR
+   ═══════════════════════════════════════════════════════════ */
+
+.pm-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Two-column card grid */
+.pm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Individual card */
+.pm-card {
+  position: relative;
+  background: #0f172a;
+  border: 2px solid #334155;
+  border-radius: 14px;
+  padding: 18px 14px 14px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, transform 0.12s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+.pm-card:hover {
+  border-color: #475569;
+  background: #1a2744;
+}
+.pm-card.selected {
+  border-color: #f43f5e;
+  background: #f43f5e0d;
+}
+.pm-card:active { transform: scale(0.97); }
+
+/* Logo pill */
+.pm-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  width: 56px;
+  height: 36px;
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+
+/* bKash — magenta brand */
+.pm-logo.bkash {
+  background: #e2136e;
+  color: #fff;
+  gap: 1px;
+}
+.pm-logo-b  { font-size: 18px; font-style: italic; }
+.pm-logo-k  { font-size: 13px; font-weight: 700; margin-top: 2px; }
+
+/* Nagad — orange brand */
+.pm-logo.nagad {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: #fff;
+}
+.pm-logo-n { font-size: 16px; font-weight: 800; letter-spacing: 1px; }
+
+/* Card text */
+.pm-name    { font-size: 14px; font-weight: 700; color: #f1f5f9; }
+.pm-tagline { font-size: 10px; color: #64748b; text-align: center; line-height: 1.3; }
+
+/* Selected checkmark badge */
+.pm-check {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 18px;
+  height: 18px;
+  background: #f43f5e;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  color: #fff;
+}
+
+/* Pay button — disabled state */
+.cs-btn.pay:disabled {
+  background: #334155;
+  color: #475569;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 1;
+}
+
+/* Receipt "Paid Via" badge */
+.pm-badge-receipt {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+.pm-badge-receipt.bkash {
+  background: #e2136e22;
+  color: #e2136e;
+  border: 1px solid #e2136e44;
+}
+.pm-badge-receipt.nagad {
+  background: #f9731622;
+  color: #f97316;
+  border: 1px solid #f9731644;
+}

@@ -1,13 +1,13 @@
 import { data } from "react-router-dom"
 
 
-
 export function saveToken(token)
 {
 
     localStorage.setItem('token' , token)
 
 }
+
 
 
 
@@ -55,4 +55,29 @@ export function isTokenExpired() {
   const exp = decode.exp 
 
   return Date.now() >= exp * 1000
+}
+
+
+export function getEmailFromToken(){
+
+    const token = getToken();
+
+    if(!token)return null;
+
+    const payload = token.split('.')[1];
+
+    const decode = JSON.parse(atob(payload));
+
+    return decode.sub;
+
+}
+
+export function getUserIdFomToken(){
+   const token = getToken();
+   if(!token) return null;
+
+   const payload = token.split('.')[1];
+   const decode = JSON.parse(atob(payload));
+
+   return decode.userId;
 }
