@@ -106,6 +106,7 @@ function CompanyActiveStatus() {
                   <p className="company-item-city">{company.companyAddress}</p>
                 </div>
 
+                {/*
                 <span
                   className="company-status-badge"
                   style={{
@@ -114,12 +115,14 @@ function CompanyActiveStatus() {
                     border: `1px solid ${statusColors[company.isActive ? "active" : "not_active"].border}40`,
                   }}
                 >
+
                   <span
                     className="status-dot"
                     style={{ backgroundColor: statusColors[company.isActive ? "active" : "not_active"].dot }}
                   ></span>
                   {company.isActive ? "active" : "not active"}
-                </span>
+                  
+                </span>*/}
               </div>
             ))}
           </div>

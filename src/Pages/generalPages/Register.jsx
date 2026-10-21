@@ -161,7 +161,7 @@ export default function Register() {
         if(err.response)
         {
 
-             console.log(err.response.data)
+             console.log("response is "  , err.response.data);
 
         }
 

@@ -215,8 +215,8 @@
 
 .info-status {
   display: inline-flex;
-  align-items: center;
-  align-self: center;
+  align-items:center;
+  align-self: flex-start;
   gap: 5px;
   font-size: 12px;
   font-weight: 600;
