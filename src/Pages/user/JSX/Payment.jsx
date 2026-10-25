@@ -145,17 +145,7 @@ function formatDate(iso) {
 
     const response = await axios.post("http://localhost:8080/api/booking", payload);
 
-    const carNeedUpdate = response.data.bookings.car;
-
     setBookingInfo(response.data.bookings);
-
-
-    const statusUpdatePayload = {
-      carId: car.carId,
-      rentalStatus: "RENTED"
-    };
-
-    const response_of_car_update = await axios.patch("http://localhost:8080/api/car/updateCarRentalStatus",statusUpdatePayload);
 
      setStep(STEP.RECEIPT);
 
