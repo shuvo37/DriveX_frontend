@@ -29,23 +29,29 @@ function UpdateCar() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [imageFile, setImageFile] = useState(null);           
-  const [imagePreview, setImagePreview] = useState(null);  
-  const[cannotChange , setCannotChange]  = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  // ── Derived from the selected car's CURRENT status (replaces cannotChange state) ──
+  const currentStatus = selected ? selected.rentalStatus.toUpperCase() : "";
+  const isAvailable   = currentStatus === "AVAILABLE";
+  const isRented      = currentStatus === "RENTED";
+  const fieldsLocked  = !!selected && currentStatus !== "MAINTENANCE"; // price, seats, fuel, tag, company, image
+  const statusLocked  = isRented;                                      // status buttons
+
+  const lockedStyle = fieldsLocked ? { opacity: 0.5, pointerEvents: "none" } : {};
+  const statusLockedStyle = statusLocked ? { opacity: 0.5, pointerEvents: "none" } : {};
 
   useEffect(() => {
     axios.get("http://localhost:8080/api/car")
     .then((res) => setCars(res.data))
-    .catch(() => setError("Failed to load companies"));
+    .catch(() => setError("Failed to load cars"));
 
     axios.get("http://localhost:8080/api/company")
     .then((res) => setCompanies(res.data))
     .catch(() => setError("Failed to load companies"));
 
   }, []);
-
-  console.log(cars);
-  console.log(companies);
 
   const filteredCars = cars.filter((c) =>
     c.modelName.toLowerCase().includes(search.toLowerCase())
@@ -56,9 +62,6 @@ function UpdateCar() {
   );
 
   const handleSelectCar = (car) => {
-
-    setCannotChange(car.rentalStatus.toUpperCase() !== "MAINTENANCE");
-
     setSelected(car);
     setFormData({
       pricePerHour: car.pricePerHour,
@@ -80,7 +83,7 @@ function UpdateCar() {
     setSelectedCompanyName(car.company.companyName);
     setSelectedModelName(car.modelName);
     setImageFile(null);
-    setImagePreview(car.imageUrl); 
+    setImagePreview(car.imageUrl);
     setSaved(false);
     setErrors({});
     setError("");
@@ -117,70 +120,99 @@ function UpdateCar() {
     return newErrors;
   };
 
-
-  
   const getImageUrl = async (file) => {
-  const formData = new FormData();
-  formData.append("file", file);
-  const response = await axios.post("http://localhost:8080/api/images/upload", formData);
-  return response.data;
-};
+    const fd = new FormData();
+    fd.append("file", file);
+    const response = await axios.post("http://localhost:8080/api/images/upload", fd);
+    return response.data;
+  };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  const newErrors = validate();
-  if (Object.keys(newErrors).length > 0) { setErrors(newErrors); return; }
+  // ── Available state: only the rental status is sent ──
+  const handleStatusUpdate = async () => {
+    const newStatus = formData.rentalStatus.toUpperCase();
+    if (newStatus === selected.rentalStatus.toUpperCase()) return; // nothing changed
 
-  if(JSON.stringify(formData) === JSON.stringify(formData1))
-  {
-    return;
-  }
+    setLoading(true);
+    setError("");
 
-  setLoading(true);
-  setError("");
+    try {
+      await axios.patch("http://localhost:8080/api/car/updateCarRentalStatus", {
+        carId: selected.carId,
+        rentalStatus: newStatus,
+      });
 
-  try {
-    let imageUrl = selected.imageUrl; // keep existing image by default
+      const updatedCar = { ...selected, rentalStatus: newStatus };
+      setCars(cars.map((c) => (c.carId === updatedCar.carId ? updatedCar : c)));
+      handleSelectCar(updatedCar); // re-evaluates locks (e.g. available -> maintenance unlocks the form)
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      if (err.response) {
+        const data = err.response.data;
+        setError(typeof data === "string" ? data : JSON.stringify(data));
+      } else {
+        setError("Server is not running. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    if (imageFile) {
-      imageUrl = await getImageUrl(imageFile); // only replace if a new file was picked
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (isRented) return;                       // rented: nothing can be saved
+    if (isAvailable) return handleStatusUpdate(); // available: status only
+
+    // ── Maintenance state: full update ──
+    const newErrors = validate();
+    if (Object.keys(newErrors).length > 0) { setErrors(newErrors); return; }
+
+    if (JSON.stringify(formData) === JSON.stringify(formData1) && !imageFile) {
+      return;
     }
 
-    console.log(selectedCompanyName);
-    console.log(selectedModelName);
+    setLoading(true);
+    setError("");
 
-    const payload = {
-      companyName: selectedCompanyName,
-      modelName: selectedModelName,
-      pricePerHour: formData.pricePerHour,
-      rentalStatus: formData.rentalStatus.toUpperCase(),
-      seats: formData.seats,
-      fuel: formData.fuel,
-      imageUrl: imageUrl,
-      tag: formData.tag,
-    };
+    try {
+      let imageUrl = selected.imageUrl; // keep existing image by default
 
-    const response = await axios.put(`http://localhost:8080/api/car/${selected.carId}`, payload);
+      if (imageFile) {
+        imageUrl = await getImageUrl(imageFile); // only replace if a new file was picked
+      }
 
-    const updatedCar = response.data.car;
+      const payload = {
+        companyName: selectedCompanyName,
+        modelName: selectedModelName,
+        pricePerHour: formData.pricePerHour,
+        rentalStatus: formData.rentalStatus.toUpperCase(),
+        seats: formData.seats,
+        fuel: formData.fuel,
+        imageUrl: imageUrl,
+        tag: formData.tag,
+      };
 
+      const response = await axios.put(`http://localhost:8080/api/car/${selected.carId}`, payload);
 
-    setCars(cars.map((c) => (c.carId === updatedCar.carId ? updatedCar : c)));
-    setSelected(updatedCar);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+      const updatedCar = response.data.car;
 
-  } catch (err) {
-    if (err.response) {
-      const data = err.response.data;
-      setError(typeof data === "string" ? data : JSON.stringify(data));
-    } else {
-      setError("Server is not running. Please try again.");
+      setCars(cars.map((c) => (c.carId === updatedCar.carId ? updatedCar : c)));
+      handleSelectCar(updatedCar); // refresh form + baseline, re-evaluates locks
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+
+    } catch (err) {
+      if (err.response) {
+        const data = err.response.data;
+        setError(typeof data === "string" ? data : JSON.stringify(data));
+      } else {
+        setError("Server is not running. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const handleReset = () => {
     if (!selected) return;
@@ -194,13 +226,12 @@ const handleSubmit = async (e) => {
     setSelectedCompany(selected.company);
     setCompanySearch(selected.company.companyName);
     setImageFile(null);
-    setImagePreview(null);
+    setImagePreview(selected.imageUrl);
     setErrors({});
     setSaved(false);
   };
 
-
- console.log("cannotChange: " , cannotChange);
+  const saveDisabled = loading || isRented;
 
   return (
     <div className="page">
@@ -266,16 +297,28 @@ const handleSubmit = async (e) => {
                 </div>
               </div>
 
+              {isAvailable && (
+                <p className="optional" style={{ marginBottom: 12 }}>
+                  Car is available — the only allowed change is Available → Maintenance. After that, other details can be edited.
+                </p>
+              )}
+              {isRented && (
+                <p className="optional" style={{ marginBottom: 12 }}>
+                  Car is currently rented — no changes are allowed.
+                </p>
+              )}
+
               <form onSubmit={handleSubmit} className="form">
 
                 {/* Row 1 — Price + Seats */}
-                <div className="form-row">
+                <div className="form-row" style={lockedStyle}>
                   <div className="form-group">
                     <label>Price Per Hour ($)</label>
                     <input
                       type="number"
                       name="pricePerHour"
                       min="0"
+                      disabled={fieldsLocked}
                       value={formData.pricePerHour}
                       onChange={(e) => {
                         setFormData({ ...formData, pricePerHour: e.target.value });
@@ -292,6 +335,7 @@ const handleSubmit = async (e) => {
                       name="seats"
                       min="1"
                       max="20"
+                      disabled={fieldsLocked}
                       value={formData.seats}
                       onChange={(e) => {
                         setFormData({ ...formData, seats: e.target.value });
@@ -302,8 +346,8 @@ const handleSubmit = async (e) => {
                   </div>
                 </div>
 
-                {/* Rental Status */}
-                <div className="form-group">
+                {/* Rental Status — editable when available or maintenance, locked when rented */}
+                <div className="form-group" style={statusLockedStyle}>
                   <label>Rental Status</label>
                   <div className="status-options">
                     {rentalStatus.map((status) => (
@@ -311,15 +355,19 @@ const handleSubmit = async (e) => {
                         type="button"
                         key={status}
                         className="status-btn"
-                        style={
-                          formData.rentalStatus === status
+                        disabled={statusLocked || (isAvailable && status === "rented")}
+                        style={{
+                          ...(formData.rentalStatus === status
                             ? {
                                 borderColor: statusColors[status].border,
                                 color: statusColors[status].color,
                                 backgroundColor: statusColors[status].bg,
                               }
-                            : {}
-                        }
+                            : {}),
+                          ...(isAvailable && status === "rented"
+                            ? { opacity: 0.4, cursor: "not-allowed" }
+                            : {}),
+                        }}
                         onClick={() => setFormData({ ...formData, rentalStatus: status })}
                       >
                         <span className="status-dot" style={{ backgroundColor: statusColors[status].dot }}></span>
@@ -330,13 +378,14 @@ const handleSubmit = async (e) => {
                 </div>
 
                 {/* Fuel Type */}
-                <div className="form-group">
+                <div className="form-group" style={lockedStyle}>
                   <label>Fuel Type</label>
                   <div className="fuel-options">
                     {fuelOptions.map((fuel) => (
                       <button
                         type="button"
                         key={fuel}
+                        disabled={fieldsLocked}
                         className={`fuel-btn ${formData.fuel === fuel ? "fuel-active" : ""}`}
                         onClick={() => setFormData({ ...formData, fuel })}
                       >
@@ -347,13 +396,14 @@ const handleSubmit = async (e) => {
                 </div>
 
                 {/* Tag */}
-                <div className="form-group">
+                <div className="form-group" style={lockedStyle}>
                   <label>Tag <span className="optional">(optional)</span></label>
                   <div className="tag-options">
                     {tagOptions.map((t) => (
                       <button
                         type="button"
                         key={t}
+                        disabled={fieldsLocked}
                         className={`tag-btn ${formData.tag === t ? "tag-active" : ""}`}
                         onClick={() => setFormData({ ...formData, tag: formData.tag === t ? "" : t })}
                       >
@@ -364,12 +414,13 @@ const handleSubmit = async (e) => {
                 </div>
 
                 {/* Company */}
-                <div className="form-group" style={{ position: "relative" }}>
+                <div className="form-group" style={{ position: "relative", ...lockedStyle }}>
                   <label>Company</label>
                   <input
                     type="text"
                     placeholder="Search company..."
                     value={companySearch}
+                    disabled={fieldsLocked}
                     className={selectedCompany ? "input-verified" : ""}
                     onChange={(e) => {
                       setCompanySearch(e.target.value);
@@ -383,7 +434,7 @@ const handleSubmit = async (e) => {
                   {selectedCompany && <span className="verified-badge">✔ Verified</span>}
                   {errors.company && <span className="error">{errors.company}</span>}
 
-                  {showDropdown && companySearch && (
+                  {showDropdown && companySearch && !fieldsLocked && (
                     <div className="company-dropdown">
                       {filteredCompanies.length === 0 ? (
                         <div className="dropdown-empty">No companies found</div>
@@ -407,7 +458,7 @@ const handleSubmit = async (e) => {
                 </div>
 
                 {selectedCompany && (
-                  <div className="company-preview">
+                  <div className="company-preview" style={lockedStyle}>
                     <div className="preview-avatar">{selectedCompany.companyName.charAt(0)}</div>
                     <div>
                       <p className="preview-name">{selectedCompany.companyName}</p>
@@ -416,19 +467,21 @@ const handleSubmit = async (e) => {
                     <button
                       type="button"
                       className="preview-remove"
+                      disabled={fieldsLocked}
                       onClick={() => { setSelectedCompany(null); setCompanySearch(""); }}
                     >✕</button>
                   </div>
                 )}
 
                 {/* Image Upload */}
-                <div className="form-group">
+                <div className="form-group" style={lockedStyle}>
                   <label>Car Image</label>
                   {!imagePreview ? (
                     <label className="image-upload-area">
                       <input
                         type="file"
                         accept="image/jpeg,image/jpg,image/png"
+                        disabled={fieldsLocked}
                         onChange={handleImageChange}
                         style={{ display: "none" }}
                       />
@@ -440,7 +493,7 @@ const handleSubmit = async (e) => {
                   ) : (
                     <div className="image-preview-wrapper">
                       <img src={imagePreview} alt="Car preview" className="image-preview" />
-                      <button type="button" className="image-remove-btn" onClick={handleImageRemove}>
+                      <button type="button" className="image-remove-btn" disabled={fieldsLocked} onClick={handleImageRemove}>
                         ✕  Click to change car image
                       </button>
                     </div>
@@ -448,10 +501,14 @@ const handleSubmit = async (e) => {
                 </div>
 
                 <div className="form-actions">
-                  <button type="button" className="btn-cancel" onClick={handleReset}>Reset</button>
-                  <button type="submit" className="btn-submit" disabled={loading || cannotChange}
-                   style={cannotChange ? { backgroundColor: "#444", color: "#999", cursor: "not-allowed" } : {}}>
-                    {loading ? "Saving..." : "Save Changes"}
+                  <button type="button" className="btn-cancel" onClick={handleReset} disabled={isRented}>Reset</button>
+                  <button
+                    type="submit"
+                    className="btn-submit"
+                    disabled={saveDisabled}
+                    style={isRented ? { backgroundColor: "#444", color: "#999", cursor: "not-allowed" } : {}}
+                  >
+                    {loading ? "Saving..." : isAvailable ? "Update Status" : "Save Changes"}
                   </button>
                 </div>
 

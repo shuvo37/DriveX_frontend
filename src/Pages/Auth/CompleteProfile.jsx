@@ -45,7 +45,7 @@ function CompleteProfile() {
         { headers: { Authorization: `Bearer ${token}` } }
       )
 
-      navigate("/user/dashboard")
+      navigate("/user-home")
     } catch (err) {
       console.log(err.response?.status)
       console.log(err.response?.data)

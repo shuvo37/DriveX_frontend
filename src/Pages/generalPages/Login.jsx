@@ -66,7 +66,9 @@ export default function Login() {
     
 
   } catch (err) {
-    const message = err.response?.data?.error || "Invalid email or password"
+    const message = err.response?.data?.message
+          || "can't reach to server";
+    console.log("response is " , err.response);
     setErrors({ password: message })
   } finally {
     setLoading(false)

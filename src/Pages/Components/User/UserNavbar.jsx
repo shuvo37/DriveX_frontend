@@ -77,7 +77,7 @@ export default function UserNavbar() {
     <nav className="user-navbar">
 
     
-      <div className="user-nav-logo" onClick={()=>navigate("/login")}>
+      <div className="user-nav-logo" onClick={()=>navigate("")}>
         <span className="user-logo-drive">Drive</span>
         <span className="user-logo-x">X</span>
       </div>

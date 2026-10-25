@@ -189,7 +189,7 @@ function CarActiveStatus() {
                 </div>
                 <div className="info-item">
                   <span className="info-label">Location</span>
-                  <span className="info-value">{selected.company.companyCity}, {selected.company.companyCountry}</span>
+                  <span className="info-value">{selected.company.companyAddress}, {selected.company.companyCity}</span>
                 </div>
                 <div className="info-item">
                   <span className="info-label">Rental Status</span>

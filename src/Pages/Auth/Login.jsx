@@ -34,7 +34,7 @@ function Login() {
     }catch(err)
     {
 
-         setError('Invalide emial or password')
+         setError("error in server");
 
     }
 
