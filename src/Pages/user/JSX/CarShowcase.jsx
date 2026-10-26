@@ -1,22 +1,12 @@
 import { useState, useMemo, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import "../CSS/CarShowcase.css";
 import axios from "axios";
 import { getEmailFromToken , getRoleFromToken , getUserIdFomToken } from "../../../utils/tokenUtils";
-
-const TAG_COLORS = {
-  SUV:         "#8b5cf6",
-  Luxury:      "#f59e0b",
-  Family:      "#10b981",
-  Sports:      "#ef4444",
-  Economy:     "#6b7280",
-  Convertible: "#06b6d4",
-  Van:         "#3b82f6",
-  Truck:       "#f97316",
-};
+import { TAG_COLORS, fuelEmoji } from "../../../utils/carDisplay";
+import { searchCars } from "../../../utils/carSearch";
 
 const FUEL_TYPES = ["PETROL", "DIESEL", "HYBRID", "ELECTRICITY"];
-const fuelEmoji  = { PETROL: "⛽", DIESEL: "🛢️", HYBRID: "🔋", ELECTRICITY: "⚡" };
 
 export default function CarShowcase() {
   const [cars,              setCars]              = useState([]);
@@ -31,6 +21,9 @@ export default function CarShowcase() {
   const [sidebarOpen,       setSidebarOpen]       = useState(true);
   const [selectedCity,      setSelectedCity]      = useState([]);
 
+  // The navbar search sends "See all results" here as /user-home?q=toyota
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchText = searchParams.get("q")?.trim() ?? "";
 
   useEffect(() => {
     Promise.all([
@@ -88,10 +81,16 @@ export default function CarShowcase() {
       prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f]
     );
 
+  const searchMatches = useMemo(
+    () => (searchText ? new Set(searchCars(cars, searchText).map((c) => c.carId)) : null),
+    [cars, searchText]
+  );
+
   const filtered = useMemo(() => {
     let list = cars.filter(
       (c) =>
         c.rentalStatus === "AVAILABLE" &&
+        (!searchMatches || searchMatches.has(c.carId)) &&
         c.pricePerHour >= priceRange[0] &&
         c.pricePerHour <= priceRange[1] &&
         (selectedCompanies.length === 0 || selectedCompanies.includes(c.company?.companyName)) &&
@@ -102,9 +101,10 @@ export default function CarShowcase() {
     if (sortBy === "price_desc") list.sort((a, b) => b.pricePerHour - a.pricePerHour);
     if (sortBy === "name")       list.sort((a, b) => a.modelName.localeCompare(b.modelName));
     return list;
-  }, [cars, priceRange, selectedCompanies, selectedFuels, sortBy, selectedCity]);
+  }, [cars, searchMatches, priceRange, selectedCompanies, selectedFuels, sortBy, selectedCity]);
 
   const clearFilters = () => {
+    setSearchParams({});
     setPriceRange([minPrice, maxPrice]);
     setSelectedCompanies([]);
     setSelectedFuels([]);
@@ -112,6 +112,7 @@ export default function CarShowcase() {
   };
 
   const hasActiveFilters =
+    searchText !== ""            ||
     selectedCompanies.length > 0 ||
     selectedFuels.length > 0     ||
     selectedCity.length > 0      ||
@@ -212,6 +213,11 @@ export default function CarShowcase() {
             <span className="csw-result-count">
               <strong>{filtered.length}</strong> cars found
             </span>
+            {searchText && (
+              <button className="csw-search-chip" onClick={() => setSearchParams({})}>
+                Search: “{searchText}” ✕
+              </button>
+            )}
             <div className="csw-sort-wrap">
               <span className="csw-sort-label">Sort:</span>
               <select
@@ -260,7 +266,10 @@ function CarCard({ car }) {
   const imageSrc = car.imageUrl ? car.imageUrl : null;
 
   return (
-    <div className="cscard-card">
+    <div
+      className="cscard-card"
+      onClick={() => navigate(`/user-home/car/${car.carId}`, { state: { car } })}
+    >
       {car.tag && (
         <span className="cscard-tag" style={{ background: TAG_COLORS[car.tag] || "#6b7280" }}>
           {car.tag}
@@ -293,7 +302,10 @@ function CarCard({ car }) {
         </div>
         <button
           className="cscard-book-btn"
-          onClick={() => navigate("payment", { state: { car } })}
+          onClick={(e) => {
+            e.stopPropagation(); // the card itself opens the details page
+            navigate("payment", { state: { car } });
+          }}
         >
           Book Now
         </button>

@@ -14,6 +14,7 @@ import CarShowcase from "./Pages/user/JSX/CarShowcase.jsx";
 import UserHome from "./Pages/user/JSX/UserHome.jsx";
 import UserNavbar from "./Pages/Components/User/UserNavbar.jsx";
 import Payment from "./Pages/user/JSX/Payment.jsx";
+import CarDetails from "./Pages/user/JSX/CarDetails.jsx";
 import Login from "./Pages/generalPages/Login.jsx";
 import Register from "./Pages/generalPages/Register.jsx";
 import CarSubmission from "./Pages/CompanyStuff/CarSubmission.jsx"
@@ -43,7 +44,9 @@ function App() {
 
             <Route path="/user-home"  element = {<ProtectedRoute allowAble={["USER"]}><UserHome/></ProtectedRoute>}>
 
-               <Route index element = {<CarShowcase/>}/> 
+               <Route index element = {<CarShowcase/>}/>
+
+              <Route path = "car/:carId" element = {<CarDetails/>}/>
 
               <Route path = "payment" element = {<Payment/>}/>
 

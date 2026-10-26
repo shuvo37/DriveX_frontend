@@ -1,0 +1,199 @@
+/* ── Car details page (same palette as the car grid) ── */
+.cdt-page {
+  min-height: calc(100vh - 62px);
+  background: #0f172a;
+  color: #f1f5f9;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 28px;
+  box-sizing: border-box;
+}
+.cdt-container { max-width: 1100px; margin: 0 auto; }
+
+.cdt-back {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+.cdt-back:hover { color: #f1f5f9; border-color: #475569; }
+
+.cdt-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+/* ── Image ── */
+.cdt-image-panel {
+  position: relative;
+  height: 400px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cdt-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cdt-no-image { color: #475569; font-size: 14px; }
+.cdt-tag {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  border-radius: 6px;
+  padding: 4px 11px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Info ── */
+.cdt-info-panel {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 24px;
+}
+.cdt-name { margin: 0 0 4px; font-size: 30px; font-weight: 800; letter-spacing: -0.5px; }
+.cdt-company { font-size: 14px; color: #64748b; margin-bottom: 16px; }
+
+.cdt-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.cdt-pill {
+  background: #0f172a;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+.cdt-status {
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #0f172a;
+}
+.cdt-status.is-available   { color: #10b981; }
+.cdt-status.is-rented      { color: #f59e0b; }
+.cdt-status.is-maintenance { color: #94a3b8; }
+
+.cdt-location { font-size: 13px; color: #94a3b8; margin-bottom: 18px; }
+
+.cdt-price-box {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+}
+.cdt-price { font-size: 34px; font-weight: 800; color: #f43f5e; }
+.cdt-per-hour { font-size: 13px; color: #64748b; margin-left: 3px; }
+
+.cdt-estimates { margin-top: 12px; border-top: 1px dashed #334155; padding-top: 10px; }
+.cdt-estimate-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #94a3b8;
+  padding: 3px 0;
+}
+.cdt-estimate-row span:last-child { color: #f1f5f9; font-weight: 600; }
+.cdt-estimate-note { margin-top: 8px; font-size: 11px; color: #64748b; }
+
+.cdt-order-btn {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  background: #f43f5e;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.cdt-order-btn:hover:not(:disabled) { background: #e11d48; }
+.cdt-order-btn:active:not(:disabled) { transform: scale(0.99); }
+.cdt-order-btn:disabled { background: #334155; color: #94a3b8; cursor: not-allowed; }
+
+/* ── Sections ── */
+.cdt-section-title { margin: 36px 0 14px; font-size: 18px; font-weight: 700; }
+
+.cdt-specs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.cdt-spec {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.cdt-spec-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+.cdt-spec-value { font-size: 14px; font-weight: 600; color: #f1f5f9; }
+
+/* ── Similar cars ── */
+.cdt-similar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+.cdt-similar-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.cdt-similar-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4); }
+.cdt-similar-img {
+  height: 130px;
+  background: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+}
+.cdt-similar-img img { width: 100%; height: 100%; object-fit: cover; }
+.cdt-similar-body { padding: 12px 14px 14px; }
+.cdt-similar-name { font-size: 15px; font-weight: 700; }
+.cdt-similar-company { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+.cdt-similar-price { font-size: 17px; font-weight: 800; color: #f43f5e; }
+.cdt-similar-price span { font-size: 11px; font-weight: 400; color: #64748b; margin-left: 2px; }
+
+/* ── Loading / not found ── */
+.cdt-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 320px;
+  color: #94a3b8;
+}
+.cdt-state-icon { font-size: 48px; }
+.cdt-state-btn { width: auto; padding: 8px 20px; font-size: 14px; margin-top: 6px; }
+
+@media (max-width: 860px) {
+  .cdt-page { padding: 18px; }
+  .cdt-grid { grid-template-columns: 1fr; }
+  .cdt-image-panel { height: 260px; }
+}

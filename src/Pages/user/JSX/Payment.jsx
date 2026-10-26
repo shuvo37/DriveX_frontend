@@ -4,6 +4,7 @@ import "../CSS/Payment.css";
 //import { ensureMockUser } from "../mockUser";
 //import { saveBooking } from "../bookingStore";
 import { getUserIdFomToken } from "../../../utils/tokenUtils";
+import useCars from "../../../hooks/useCars";
 import axios from "axios";
 
 const PAY_METHODS = [
@@ -17,6 +18,10 @@ export default function Payment() {
   const location = useLocation();
   const navigate = useNavigate();
   const carData  = location.state?.car;
+
+  // Declared before the early return below, so these hooks always run in the same order.
+  const { cars } = useCars();
+  const [selectedCity, setSelectedCity] = useState("");
 
   if (!carData) {
     navigate("/user-home");
@@ -48,7 +53,13 @@ export default function Payment() {
   const [bookingId , setBookingId]   = useState(0);
   const [bookingTime] = useState(new Date());
 
-  const userCity      = car.city;
+  // A car can only be rented by someone in the car's own city (Khulna -> Barisal is useless).
+  const sameCity = (a, b) => a.trim().toLowerCase() === b.trim().toLowerCase();
+  const cityOptions = [
+    ...new Set([car.city, ...cars.map((c) => c.company?.companyCity)].filter(Boolean)),
+  ].sort((a, b) => a.localeCompare(b));
+  const cityMismatch = selectedCity !== "" && !sameCity(selectedCity, car.city);
+
   const totalHours    = days * 24 + hours;
   const totalPrice    = parseFloat((totalHours * car.price_per_hour).toFixed(2));
   const durationLabel = days > 0 ? `${days}d ${hours}h` : `${hours}h`;
@@ -76,7 +87,9 @@ function formatDate(iso) {
   const validateDetails = () => {
     const e = {};
     if (!address.trim())          e.address  = "Required.";
-    if (!userCity)                 e.userCity = "Service city unavailable for this car.";
+    if (!car.city)                 e.userCity = "Service city unavailable for this car.";
+    else if (!selectedCity)        e.userCity = "Select your city.";
+    else if (cityMismatch)         e.userCity = `This car is only available in ${car.city}.`;
     if (!/^01\d{9}$/.test(phone)) e.phone    = "Enter a valid 11-digit BD number (starts with 01).";
     if (totalHours < 1)           e.duration = "Minimum rental is 1 hour.";
     setErrors(e);
@@ -106,6 +119,7 @@ function formatDate(iso) {
     paymentStatus: "DONE",
     paymentType: "RENTED_PRICE",
     totalAmount: totalPrice,
+    city: selectedCity,
   }
 
   try {
@@ -141,6 +155,7 @@ function formatDate(iso) {
       totalHours: totalHours,
       address: address,
       phone: phone,
+      city: selectedCity,
     };
 
     const response = await axios.post("http://localhost:8080/api/booking", payload);
@@ -253,6 +268,35 @@ Thank you for choosing DriveX!
             </div>
 
             <div className="field-group">
+              <label className="field-label">🏙️ Your City</label>
+              <select
+                className={`pay-input city-select ${cityMismatch || errors.userCity ? "err" : ""}`}
+                value={selectedCity}
+                onChange={(e) => {
+                  setSelectedCity(e.target.value);
+                  setErrors((prev) => ({ ...prev, userCity: undefined }));
+                }}
+              >
+                <option value="">Select your city</option>
+                {cityOptions.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+              {cityMismatch ? (
+                <div className="field-error">
+                  🚫 This car is in <strong>{car.city}</strong>, so it can't be booked from {selectedCity}.
+                  Choose {car.city} or pick another car.
+                </div>
+              ) : errors.userCity ? (
+                <div className="field-error">{errors.userCity}</div>
+              ) : selectedCity ? (
+                <div className="city-ok">✓ You are in the same city as this car</div>
+              ) : (
+                <div className="city-hint">This car is available in {car.city}</div>
+              )}
+            </div>
+
+            <div className="field-group">
               <label className="field-label">🏠 Pickup Address</label>
               <div className="address-grid">
                 <div className="addr-field">
@@ -268,7 +312,7 @@ Thank you for choosing DriveX!
               </div>
               {address && (
                 <div className="address-preview">
-                  📍 {address}{userCity ? `, ${userCity}` : ""}
+                  📍 {address}{selectedCity ? `, ${selectedCity}` : ""}
                 </div>
               )}
             </div>
@@ -293,7 +337,7 @@ Thank you for choosing DriveX!
               rate={car.price_per_hour} total={totalPrice}
             />
 
-            <button className="pay-btn primary" onClick={handleNextDetails}>
+            <button className="pay-btn primary" onClick={handleNextDetails} disabled={cityMismatch}>
               Proceed to Payment →
             </button>
           </div>

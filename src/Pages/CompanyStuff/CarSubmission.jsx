@@ -504,7 +504,7 @@ Thank you for choosing DriveX!
                   <div className={styles["fine-icon"]}>✅</div>
                   <div className={styles["fine-text"]}>
                     <div className={styles["fine-title"]}>Returned On Time</div>
-                    <div className={styles["fine-desc"]}>Within {GRACE_HOURS}h grace period — no charge</div>
+                   {/* <div className={styles["fine-desc"]}>Within {GRACE_HOURS}h grace period — no charge</div>*/}
                   </div>
                   <div className={`${styles["fine-amount"]} ${styles["free"]}`}>$0</div>
                 </>
