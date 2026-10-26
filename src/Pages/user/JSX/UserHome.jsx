@@ -1,5 +1,6 @@
 
 import Navbar from "../../Components/User/UserNavbar";
+import CarAssistant from "../../Components/User/CarAssistant";
 import CarShowcase from "./CarShowcase";
 import "../CSS/UserHome.css";
 import { Outlet } from "react-router-dom";
@@ -12,6 +13,7 @@ return(
   
    <Navbar/>
    <Outlet/>       
+   <CarAssistant/>
    
    </div>
 );

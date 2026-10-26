@@ -8,6 +8,7 @@ export default function AdminNavbar() {
   const navItems = [
     { key: "StartRent",     label: "🔍 ONGOING CAR",    path: "search-ongoing-car"},
      { key: "SubmitCar",     label: "🔄 Update Role",    path: "role-update"},
+    { key: "AiAnalyst",     label: "🤖 AI ANALYST",     path: "ai-analyst"},
     { key: "about",      label: "ℹ️ About Us",       path: ""       },
     { key: "contact",    label: "📞 Contact Us",     path: ""     },
     {key : "logout" ,    label: "⏻ LogOut",      path:"/"}

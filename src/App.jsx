@@ -21,6 +21,7 @@ import CarRentTimeStart from "./Pages/CompanyStuff/CarRentTimeStart.jsx"
 import Profile from "./Pages/user/JSX/Profile.jsx"
 import RoleUpdate from "./Pages/admin/RoleUpdate.jsx";
 import SearchBookingCar from "./Pages/admin/SearchBookingCar.jsx";
+import AiAnalyst from "./Pages/admin/AiAnalyst.jsx";
 import StuffHome from "./Pages/CompanyStuff/StuffHome.jsx"
 import ForgotPassword from "./Pages/generalPages/ForgotPassword.jsx"
 
@@ -82,6 +83,7 @@ function App() {
 
               <Route path = "role-update" element = {<ProtectedRoute  allowAble = {"ADMIN"}><RoleUpdate/></ProtectedRoute>}/>
               <Route path = "search-ongoing-car" element = {<ProtectedRoute  allowAble = {"ADMIN"}><SearchBookingCar/></ProtectedRoute>}/>
+              <Route path = "ai-analyst" element = {<ProtectedRoute  allowAble = {"ADMIN"}><AiAnalyst/></ProtectedRoute>}/>
           
            </Route>
 

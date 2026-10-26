@@ -36,8 +36,10 @@ function formatLate(minutesLate) {
 
 let now = null;
 
- const extra_pay = Number(2);
-
+// Late fine, per late HOUR: the car's hourly rate + an extra charge.
+// The extra charge is half the hourly rate, rounded down, and at least $1.
+// Example: rate $3 -> extra $1 (floor 1.5), so each late hour costs $4.
+// Example: rate $10 -> extra $5, so each late hour costs $15.
 function calculateFine(booking) {
   const mustReturnBy = new Date(booking.rentStart).getTime()
     + booking.totalHours * 60 * 60 * 1000;
@@ -45,9 +47,15 @@ function calculateFine(booking) {
    now = Date.now();
 
   const minutesLate = Math.max(0, Math.floor((now - mustReturnBy) / 60000));
-  const hoursLate = minutesLate / 60;
-  const fineAmount = minutesLate > 0
-    ? parseFloat((hoursLate * (Number(booking.car.pricePerHour) + extra_pay)).toFixed(2))
+
+  // Only complete late hours count. 59 minutes late = 0 hours, 2 hr 40 min late = 2 hours.
+  const hoursLate = Math.floor(minutesLate / 60);
+
+  const pricePerHour = Number(booking.car.pricePerHour);
+  const extra_pay = Math.max(1, Math.floor(pricePerHour / 2));
+
+  const fineAmount = hoursLate > 0
+    ? parseFloat((hoursLate * (pricePerHour + extra_pay)).toFixed(2))
     : 0;
 
   return { mustReturnBy, minutesLate, fineAmount, status: minutesLate > 0 ? "late" : "ontime" };
