@@ -199,7 +199,7 @@
   color: #fff;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  z-index: 999;
+  z-index: 2; /* above the car image, but below the sticky navbar (100) and the search dropdown */
   box-shadow: 0 2px 8px rgba(0,0,0,0.5);
   pointer-events: none;
 }
@@ -269,3 +269,16 @@
   font-size: 14px;
 }
 
+
+/* ── Active search chip (set from the navbar search) ── */
+.csw-search-chip {
+  background: #f43f5e22;
+  border: 1px solid #f43f5e;
+  color: #f43f5e;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.csw-search-chip:hover { background: #f43f5e33; }

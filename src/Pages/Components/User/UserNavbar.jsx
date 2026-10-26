@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./UserNavbar.css";
 import { removeToken  , getEmailFromToken} from "../../../utils/tokenUtils";
+import CarSearch from "./CarSearch";
 
 import {useNavigate} from "react-router-dom";
 
@@ -81,6 +82,8 @@ export default function UserNavbar() {
         <span className="user-logo-drive">Drive</span>
         <span className="user-logo-x">X</span>
       </div>
+
+      <CarSearch />
 
   <ul className="user-nav-links">
   {navItems.map((item) => (

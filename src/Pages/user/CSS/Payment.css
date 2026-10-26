@@ -342,3 +342,10 @@
   .dur-num            { padding: 0 10px; font-size: 18px; }
   .address-grid       { grid-template-columns: 1fr 1fr; }
 }
+/* ── City dropdown (booking details step) ── */
+.city-select { cursor: pointer; }
+.city-select option { background: #0f172a; color: #f1f5f9; }
+.city-hint { font-size: 12px; color: #64748b; }
+.city-ok   { font-size: 12px; color: #10b981; }
+.pay-btn.primary:disabled { background: #334155; color: #94a3b8; cursor: not-allowed; }
+.pay-btn.primary:disabled:hover { background: #334155; }
