@@ -223,7 +223,7 @@ export default function Register() {
             <h2>Welcome to DriveX!</h2>
             <p>Your account has been created successfully.<br /></p>
             <button className={`${styles["rx-btn"]} ${styles["rx-btn-primary"]}`} style={{ maxWidth: 220, margin: "0 auto" }}
-              onClick={()=>navigate("/login")}>
+              onClick={()=>navigate("/")}>
               Go to Login →
             </button>
           </div>
