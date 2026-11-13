@@ -28,6 +28,7 @@
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
 - [Configuration](#configuration)
+- [Testing Payments](#testing-payments)
 - [API Overview](#api-overview)
 - [Design Decisions](#design-decisions)
 - [Author](#author)
@@ -270,6 +271,20 @@ All backend settings are read from user-secrets (development) or environment var
 | `Frontend:BaseUrl` | No | Frontend address for redirects and CORS (default `http://localhost:5173`) |
 
 Frontend: `VITE_API_URL` (default `http://localhost:8080`).
+
+---
+
+## Testing Payments
+
+Payments are in **testing mode** through SSLCommerz, so no real money is charged. When the payment page opens, stay on the **CARDS** tab and fill in:
+
+| Field | Value |
+|---|---|
+| Card number | `4111 1111 1111 1111` |
+| MM/YY | `12/36` (or any future date) |
+| CVC/CVV | `111` |
+| Card holder name | Anything, for example `Test` |
+| OTP code | `111111` |
 
 ---
 
