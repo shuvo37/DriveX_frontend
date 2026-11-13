@@ -278,13 +278,13 @@ Frontend: `VITE_API_URL` (default `http://localhost:8080`).
 
 Payments are in **testing mode** through SSLCommerz, so no real money is charged. When the payment page opens, stay on the **CARDS** tab and fill in:
 
-| Field | Value |
-|---|---|
-| Card number | `4111 1111 1111 1111` |
-| MM/YY | `12/36` (or any future date) |
-| CVC/CVV | `111` |
-| Card holder name | Anything, for example `Test` |
-| OTP code | `111111` |
+```
+Card number: 4111 1111 1111 1111
+MM/YY: 12/36 (or any future date)
+CVC/CVV: 111
+Card holder name: anything, for example Test
+OTP code: 111111
+```
 
 ---
 
